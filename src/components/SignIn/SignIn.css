@@ -1,0 +1,66 @@
+.errorMessage {
+    color: red;
+  }
+  a{
+      text-decoration: none;
+  }
+  
+  h1{
+      text-align: center;
+  }
+  
+  .myForm {
+    padding-top: 5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .myForm h2 {
+    text-align: center;
+  }
+  
+  .form-group {
+  }
+  
+  input {
+    border: none;
+    background-color: rgb(224, 224, 224);
+    height: 2rem;
+    font-size: 20px;
+  }
+  label {
+    display: block;
+  
+    margin-bottom: 10px;
+  }
+  
+  .btn {
+      display: block;
+      margin:0 auto;
+    background: #3498db;
+    background-image: -webkit-linear-gradient(top, #3498db, #2980b9);
+    background-image: -moz-linear-gradient(top, #3498db, #2980b9);
+    background-image: -ms-linear-gradient(top, #3498db, #2980b9);
+    background-image: -o-linear-gradient(top, #3498db, #2980b9);
+    background-image: linear-gradient(to bottom, #3498db, #2980b9);
+    -webkit-border-radius: 11;
+    -moz-border-radius: 11;
+    border-radius: 11px;
+    font-family: Arial;
+    color: #ffffff;
+    font-size: 21px;
+    padding: 10px 20px 10px 20px;
+    text-decoration: none;
+  }
+  
+  .btn:hover {
+    background: #3cb0fd;
+    background-image: -webkit-linear-gradient(top, #3cb0fd, #3498db);
+    background-image: -moz-linear-gradient(top, #3cb0fd, #3498db);
+    background-image: -ms-linear-gradient(top, #3cb0fd, #3498db);
+    background-image: -o-linear-gradient(top, #3cb0fd, #3498db);
+    background-image: linear-gradient(to bottom, #3cb0fd, #3498db);
+    text-decoration: none;
+  }
+  
