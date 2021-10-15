@@ -90,15 +90,12 @@ function SignIn() {
 
     if (detail.email.trim().length < 1) {
       setEmailError("Email is requied");
-    } 
-    // else if (
-    //   !detail.email.match(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/)
-    // ) 
-    // {
-    //   setEmailError("Email fromat not correct");
-    //   isValid = false;
-    // } 
-    else {
+    } else if (
+      !detail.email.match(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/)
+    ) {
+      setEmailError("Email fromat not correct");
+      isValid = false;
+    } else {
       setEmailError("Email not found");
     }
 

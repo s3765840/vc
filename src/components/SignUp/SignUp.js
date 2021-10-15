@@ -18,7 +18,6 @@ function SignUp({}) {
   const [passwordError, setPasswordError] = useState("");
   const [confirmPasswordError, setConfirmPasswordError] = useState("");
   const [isClickSubmit, setIsClickSubmit] = useState(false);
-  const [user, setUser] = useState([]);
   const [isEmailExists, setIsEmailExists] = useState(false);
 
 
@@ -52,8 +51,6 @@ function SignUp({}) {
       if (response == "Emial is exists, Please contact admin") {
         setIsEmailExists(true)
         // console.log("WWWW");
-      }else{
-        localStorage.setItem("user", JSON.stringify(response.email));
       }
     }
   }, [response]);
