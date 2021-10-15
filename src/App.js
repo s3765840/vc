@@ -6,7 +6,6 @@ import Profile from "./components/Profile/Profile";
 import Post from "./components/PostPage/Post";
 import Home from "./components/HomePage/HomePage";
 import AllPost from "./components/AllPosts/AllPosts";
-import axios from 'axios';
 
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 
