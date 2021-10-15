@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import "./SignUp.css";
+import axios from "axios";
 
 function SignUp({}) {
   const [detail, setDetail] = useState({
@@ -10,6 +11,10 @@ function SignUp({}) {
     creatAt: "",
   });
   const [usersList, setUsersList] = useState([]);
+  //api test
+  const [totalReactPackages, setTotalReactPackages] = useState([]);
+  const [articleId, setArticleId] = useState([]);
+
   const [nameError, setNameError] = useState("");
   const [emailError, setEmailError] = useState("");
   const [passwordError, setPasswordError] = useState("");
@@ -26,6 +31,35 @@ function SignUp({}) {
     setIsEmailExists(false);
   };
 
+  const test1 = () => {
+    console.log(totalReactPackages);
+    console.log("Ccc");
+  };
+  const test2 = () => {
+    console.log("TEST 2");
+    console.log(articleId);
+
+  };
+  useEffect(() => {
+    // GET request using axios inside useEffect React hook
+    // axios
+    //   .get("http://localhost:5001/test")
+    //   .then((response) => setTotalReactPackages(response.data))
+    //   .then(console.log("test1"));
+
+    const article = { title: "React Hooks POST Request Example" };
+    axios
+      .post("http://localhost:5001/test", article)
+      .then((response) => setArticleId(response.data));
+      // .post("https://reqres.in/api/articles", article)
+      // .then((response) => setArticleId(response.data.id));
+
+    // setTimeout(() => {
+
+    // }, 550);
+    // empty dependency array means this effect will only run once (like componentDidMount in classes)
+  }, []);
+
   useEffect(() => {
     localStorage.setItem("loginStatus", JSON.stringify(false));
   }, []);
@@ -34,6 +68,7 @@ function SignUp({}) {
 
   useEffect(() => {
     if (isClickSubmit) {
+      console.log("ddddd");
       addDate();
     }
   }, [isClickSubmit]);
@@ -63,13 +98,11 @@ function SignUp({}) {
         year: "numeric",
         month: "2-digit",
         day: "2-digit",
-       
       }).format(today),
     });
   };
-// all validation functions
+  // all validation functions
   const formValidation = () => {
-
     var isValid = "true";
     if (detail.name.trim().length < 1) {
       setNameError("Name is requied");
@@ -92,12 +125,15 @@ function SignUp({}) {
       setPasswordError("Password is requied");
       isValid = false;
     } else if (
-      !detail.password.match(/^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{6,}$/
-      
-      // !detail.password.match(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{6,}$/
+      !detail.password.match(
+        /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{6,}$/
+
+        // !detail.password.match(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{6,}$/
       )
     ) {
-      setPasswordError("Password at least 6, include Upcase, lower case and one special character(@$!%*#?&)");
+      setPasswordError(
+        "Password at least 6, include Upcase, lower case and one special character(@$!%*#?&)"
+      );
       console.log(detail.password);
       isValid = false;
     } else {
@@ -119,7 +155,6 @@ function SignUp({}) {
     return isValid;
   };
 
- 
   const creatOrFindStorage = () => {
     if ("usersList" in localStorage) {
       setUsersList(JSON.parse(localStorage.getItem("usersList")));
@@ -136,6 +171,7 @@ function SignUp({}) {
   // update usersList to localStorage
   const updateStorage = () => {
     if (isLocalStorageEmpty) {
+      console.log(usersList);
       localStorage.setItem("usersList", JSON.stringify(usersList));
     } else {
       var data = JSON.parse(localStorage.getItem("usersList"));
@@ -143,21 +179,19 @@ function SignUp({}) {
       data.forEach((item) => {
         updateData.push(item.email);
       });
-     
-     var isMatch = checkAvailability(updateData, detail.email)
-      setIsEmailExists(isMatch)
-      if(isMatch === false){
+
+      var isMatch = checkAvailability(updateData, detail.email);
+      setIsEmailExists(isMatch);
+      if (isMatch === false) {
         var updateData2 = [];
-            data.forEach((item) => {
-              updateData2.push(item);
-            });
-            updateData2.push(detail);
-            localStorage.setItem("usersList", JSON.stringify(updateData2));
-      } 
-      
+        data.forEach((item) => {
+          updateData2.push(item);
+        });
+        updateData2.push(detail);
+        localStorage.setItem("usersList", JSON.stringify(updateData2));
+      }
     }
   };
-  
 
   return (
     <div>
@@ -220,7 +254,18 @@ function SignUp({}) {
             </div>
             <div className="errorMessage">{confirmPasswordError}</div>
             <br />
-            <button type="submit"className="btn"> SUBMIT </button>
+            <button type="submit" className="btn">
+              {" "}
+              SUBMIT{" "}
+            </button>
+            <button className="btn" onClick={test1}>
+              {" "}
+              Test get{" "}
+            </button>
+            <button className="btn" onClick={test2}>
+              {" "}
+              Test post{" "}
+            </button>
             {/* <h1>{detail.password}</h1> */}
           </form>
         ) : null}
@@ -230,8 +275,8 @@ function SignUp({}) {
           <div>
             <h1>Sign up successful </h1>
             <a href="signIn">
-            <button className="btn">Go to Sign In page</button>
-</a>
+              <button className="btn">Go to Sign In page</button>
+            </a>
           </div>
         ) : null}
       </div>
@@ -240,8 +285,8 @@ function SignUp({}) {
           <div>
             <h1>Emial is exists, Please contact admin </h1>
             <a href="signUp">
-            <button className="btn">Back to sign up page</button>
-</a>
+              <button className="btn">Back to sign up page</button>
+            </a>
           </div>
         ) : null}
       </div>

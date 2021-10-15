@@ -8,10 +8,16 @@ import Home from "./components/HomePage/HomePage";
 import AllPost from "./components/AllPosts/AllPosts";
 
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+// import axios from 'axios'
+// const api = axios.create({
+//   baseURL:`http://localhost:5001`
+// })
 
 function App() {
-
- 
+// console.log("ssstest");
+// api.get('/').then(res=>{
+//   console.log(res);
+// })
 
   return (
     <div className="App">
