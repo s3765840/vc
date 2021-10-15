@@ -10,26 +10,55 @@ function SignUp({}) {
     confirmPassword: "",
     creatAt: "",
   });
+  const [usersList, setUsersList] = useState([]);
   //api test
-  const [response, setResponse] = useState([]);
-
+  const [totalReactPackages, setTotalReactPackages] = useState([]);
+  const [articleId, setArticleId] = useState([]);
+// api test end 
   const [nameError, setNameError] = useState("");
   const [emailError, setEmailError] = useState("");
   const [passwordError, setPasswordError] = useState("");
   const [confirmPasswordError, setConfirmPasswordError] = useState("");
   const [isClickSubmit, setIsClickSubmit] = useState(false);
-  const [user, setUser] = useState([]);
   const [isEmailExists, setIsEmailExists] = useState(false);
-
+  const [isLocalStorageEmpty, setIsLocalStorageEmpty] = useState(true);
 
   const submitHandler = (e) => {
     e.preventDefault();
     const isValid = formValidation();
     setIsClickSubmit(isValid);
+    setIsLocalStorageEmpty(true);
+    setIsEmailExists(false);
   };
 
+  const test1 = () => {
+    console.log(totalReactPackages);
+    console.log("Ccc");
+  };
+  const test2 = () => {
+    console.log("TEST 2");
+    console.log(articleId);
 
+  };
+  useEffect(() => {
+    // GET request using axios inside useEffect React hook
+    // axios
+    //   .get("http://localhost:5001/test")
+    //   .then((response) => setTotalReactPackages(response.data))
+    //   .then(console.log("test1"));
 
+    const article = { title: "React Hooks POST Request Example" };
+    axios
+      .post("http://localhost:5001/user", article)
+      .then((response) => setArticleId(response.data));
+      // .post("https://reqres.in/api/articles", article)
+      // .then((response) => setArticleId(response.data.id));
+
+    // setTimeout(() => {
+
+    // }, 550);
+    // empty dependency array means this effect will only run once (like componentDidMount in classes)
+  }, []);
 
   useEffect(() => {
     localStorage.setItem("loginStatus", JSON.stringify(false));
@@ -38,26 +67,40 @@ function SignUp({}) {
   // when pass validation then got to set create date
 
   useEffect(() => {
-    if (isClickSubmit && formValidation()) {
-      axios
-      .post("http://localhost:5001/user/signUp", detail)
-      .then((response) => setResponse(response.data));
+    if (isClickSubmit) {
+      console.log("ddddd");
+      addDate();
     }
-    
   }, [isClickSubmit]);
+  // After detail.createDate updated, find or creat localStorage.
+  useEffect(() => {
+    if (isClickSubmit) {
+      creatOrFindStorage();
+      console.log("rrr");
+    }
+  }, [detail.creatAt]);
+  useEffect(() => {
+    if (isClickSubmit) {
+      updateStorage();
+    }
+  }, [usersList]);
 
   useEffect(() => {
-    if (isClickSubmit && formValidation()) {
-      console.log(response);
-      if (response == "Emial is exists, Please contact admin") {
-        setIsEmailExists(true)
-        // console.log("WWWW");
-      }else{
-        localStorage.setItem("user", JSON.stringify(response.email));
-      }
+    if (isClickSubmit) {
     }
-  }, [response]);
-  
+  }, [isEmailExists]);
+
+  const addDate = () => {
+    const today = Date.now();
+    setDetail({
+      ...detail,
+      creatAt: new Intl.DateTimeFormat("en-US", {
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit",
+      }).format(today),
+    });
+  };
   // all validation functions
   const formValidation = () => {
     var isValid = "true";
@@ -81,21 +124,19 @@ function SignUp({}) {
     if (detail.password.trim().length < 1) {
       setPasswordError("Password is requied");
       isValid = false;
-    } 
-    // else if (
-    //   !detail.password.match(
-    //     /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{6,}$/
+    } else if (
+      !detail.password.match(
+        /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{6,}$/
 
-    //     // !detail.password.match(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{6,}$/
-    //   )
-    // ) {
-    //   setPasswordError(
-    //     "Password at least 6, include Upcase, lower case and one special character(@$!%*#?&)"
-    //   );
-    //   console.log(detail.password);
-    //   isValid = false;
-    // } 
-    else {
+        // !detail.password.match(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{6,}$/
+      )
+    ) {
+      setPasswordError(
+        "Password at least 6, include Upcase, lower case and one special character(@$!%*#?&)"
+      );
+      console.log(detail.password);
+      isValid = false;
+    } else {
       setPasswordError("");
     }
 
@@ -114,7 +155,43 @@ function SignUp({}) {
     return isValid;
   };
 
-  
+  const creatOrFindStorage = () => {
+    if ("usersList" in localStorage) {
+      setUsersList(JSON.parse(localStorage.getItem("usersList")));
+      setIsLocalStorageEmpty(false);
+    } else {
+      setUsersList(usersList.concat(detail));
+    }
+  };
+  function checkAvailability(arr, val) {
+    return arr.some(function (arrVal) {
+      return val === arrVal;
+    });
+  }
+  // update usersList to localStorage
+  const updateStorage = () => {
+    if (isLocalStorageEmpty) {
+      console.log(usersList);
+      localStorage.setItem("usersList", JSON.stringify(usersList));
+    } else {
+      var data = JSON.parse(localStorage.getItem("usersList"));
+      var updateData = [];
+      data.forEach((item) => {
+        updateData.push(item.email);
+      });
+
+      var isMatch = checkAvailability(updateData, detail.email);
+      setIsEmailExists(isMatch);
+      if (isMatch === false) {
+        var updateData2 = [];
+        data.forEach((item) => {
+          updateData2.push(item);
+        });
+        updateData2.push(detail);
+        localStorage.setItem("usersList", JSON.stringify(updateData2));
+      }
+    }
+  };
 
   return (
     <div>
@@ -181,7 +258,15 @@ function SignUp({}) {
               {" "}
               SUBMIT{" "}
             </button>
-          
+            <button className="btn" onClick={test1}>
+              {" "}
+              Test get{" "}
+            </button>
+            <button className="btn" onClick={test2}>
+              {" "}
+              Test post{" "}
+            </button>
+            {/* <h1>{detail.password}</h1> */}
           </form>
         ) : null}
       </div>
@@ -205,7 +290,6 @@ function SignUp({}) {
           </div>
         ) : null}
       </div>
-      
     </div>
   );
 }
