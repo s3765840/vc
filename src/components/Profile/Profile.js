@@ -3,8 +3,11 @@ import "./Profile.css";
 import { BsFillTrashFill } from "react-icons/bs";
 import { BsFillPersonFill } from "react-icons/bs";
 import { BsBrush } from "react-icons/bs";
+import moment from "moment";
+import axios from "axios";
 
 function Profile() {
+  // moment
   const [detail, setDetail] = useState({
     name: "",
     email: "",
@@ -13,12 +16,14 @@ function Profile() {
     creatAt: "",
   });
   const [editFrom, setEditFrom] = useState({
+    id:0,
+    email:"",
     name: "",
     password: "",
     confirmPassword: "",
   });
   const [edit, setEdit] = useState(false);
-  const [usersList, setUsersList] = useState([]);
+  const [userInfo, setUserInfo] = useState();
   const [nameError, setNameError] = useState("");
   const [passwordError, setPasswordError] = useState("");
   const [confirmPasswordError, setConfirmPasswordError] = useState("");
@@ -35,6 +40,8 @@ function Profile() {
   const [display4, setDisplay4] = useState({ display: "block" });
   // back to home page visual cue
   const [display5, setDisplay5] = useState({ display: "none" });
+  const [response, setResponse] = useState([]);
+
   useEffect(() => {
     setDetail(JSON.parse(localStorage.getItem("userInfo")));
   }, []);
@@ -50,111 +57,50 @@ function Profile() {
     setDisplay3({ display: "none" });
     setDisplay4({ display: "block" });
   };
-  useEffect(() => {}, [edit]);
 
   useEffect(() => {
     if (isClickSubmit) {
       console.log("EF called");
-      getAllDate();
+      setEditFrom({ ...editFrom, id: detail.id , email:detail.email})
+      // setUserInfo(JSON.parse(localStorage.getItem("userInfo")));
     }
   }, [isClickSubmit]);
-  useEffect(() => {
-    isMatch();
-  }, [usersList]);
+
   useEffect(() => {
     if (isClickSubmit) {
-      changeData();
+      callApi();
+      console.log(editFrom);
     }
-  }, [position]);
+  }, [editFrom]);
+  const callApi = (e) => {
+    localStorage.setItem("userInfo", JSON.stringify(editFrom));
+
+    axios
+      .post("http://localhost:5001/user/update", editFrom)
+      .then((response) => setResponse(response.data));
+  };
+
+  useEffect(() => {
+    if (isClickSubmit) {
+
+    }
+  }, [response]);
 
   const submitHandler = (e) => {
     e.preventDefault();
     const isValid = formValidation();
     setIsClickSubmit(isValid);
-  };
-
-  const getAllDate = () => {
-    setUsersList(JSON.parse(localStorage.getItem("usersList")));
-  };
-  const isMatch = () => {
-    console.log("match is working");
-
-    console.log(usersList);
-    console.log(position);
-    for (let i = 0; i < usersList.length; i++) {
-      if (usersList[i].email == detail.email) {
-        console.log("position is working");
-
-        setPosition(i + 1);
-      } else {
-        console.log("position ending");
-      }
-    }
-  };
-
-  const changeData = () => {
-    console.log(usersList);
-    const temArray = [];
-    for (let j = 0; j < usersList.length; j++) {
-      if (j != position - 1) {
-        temArray.push(usersList[j]);
-      } else {
-        const a = {
-          name: editFrom.name,
-          email: usersList[j].email,
-          password: editFrom.password,
-          confirmPassword: editFrom.password,
-          creatAt: usersList[j].creatAt,
-        };
-        temArray.push(a);
-
-        localStorage.setItem("userInfo", JSON.stringify(a));
-      }
-      localStorage.setItem("usersList", JSON.stringify(temArray));
-      setDetail(JSON.parse(localStorage.getItem("userInfo")));
-
-      setDisplay1({ display: "block" });
-      setTimeout(() => {
-        setDisplay4({ display: "block" });
-      }, 2000);
-      setDisplay3({ display: "none" });
-
-      setTimeout(() => {
-        setDisplay1({ display: "none" });
-      }, 2000);
-    }
+    console.log("click but");
+    console.log(editFrom);
   };
 
   const deletUser = () => {
     setDisplay4({ display: "none" });
     setDisplay2({ display: "block" });
-    getAllDate();
   };
   const cancel = () => {
     setDisplay2({ display: "none" });
     setDisplay4({ display: "block" });
-  };
-  const confirmDelet = () => {
-    deletUserLocalStorage();
-    setDisplay2({ display: "none" });
-  };
-
-  const deletUserLocalStorage = () => {
-    const temArray = [];
-    for (let k = 0; k < usersList.length; k++) {
-      if (k != position - 1) {
-        temArray.push(usersList[k]);
-      }
-      const a = temArray;
-      localStorage.setItem("usersList", JSON.stringify(a));
-      localStorage.setItem("loginStatus", JSON.stringify(false));
-      localStorage.removeItem("userInfo");
-      setDisplay5({ display: "block" });
-
-      setTimeout(() => {
-        window.location.href = "/";
-      }, 1500);
-    }
   };
 
   const formValidation = () => {
@@ -174,13 +120,15 @@ function Profile() {
       isValid = false;
     } else if (
       // !editFrom.password.match(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{6,}$/
-      !editFrom.password.match(/^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{6,}$/
-
+      !editFrom.password.match(
+        /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{6,}$/
       )
     ) {
-      setPasswordError("Password at least 6, include Upcase, lower case and one special character(@$!%*#?&)");
+      setPasswordError(
+        "Password at least 6, include Upcase, lower case and one special character(@$!%*#?&)"
+      );
       isValid = false;
-    }  else {
+    } else {
       setPasswordError("");
     }
     if (editFrom.confirmPassword.trim().length < 1) {
@@ -220,7 +168,7 @@ function Profile() {
               <p>{detail.email}</p>
               <p>
                 <b>Joined: </b>
-                {detail.creatAt}
+                {moment(detail.createdAt).format("DD-MMM-YYYY")}
               </p>
             </div>
           </div>
@@ -309,9 +257,9 @@ function Profile() {
             <button className="btn1" onClick={cancel}>
               CANCEL
             </button>
-            <button className="btn1" onClick={confirmDelet}>
+            {/* <button className="btn1" onClick={confirmDelet}>
               CONFIRM
-            </button>
+            </button> */}
           </div>
 
           <div className="backToHomePage" style={display5}>

@@ -38,17 +38,6 @@ function SignIn() {
       isMatch();
     }
   }, [usersList]);
-  // useEffect(() => {
-  //   if (isClickSubmit) {
-  //     localStorage.setItem("LoginStatus", JSON.stringify(usersList));
-  //   }
-  // }, [isLogIn]);
-  // useEffect(() => {
-  //   props. changeWord('ani')
-  //     console.log(position);
-  //     // props.setPosition(position);
-    
-  // }, [position]);
 
   const getAllDate = () => {
     setUsersList(JSON.parse(localStorage.getItem("usersList")));

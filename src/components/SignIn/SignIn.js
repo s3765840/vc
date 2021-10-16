@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import "./SignIn.css";
+import axios from "axios";
 
 function SignIn() {
   const [detail, setDetail] = useState({ email: "", password: "" });
@@ -12,7 +13,8 @@ function SignIn() {
   const [passwordWrong, setPasswordWrong] = useState(false);
   const [usersList, setUsersList] = useState([]);
   // const [position, setPosition] = useState(0);
-  // const [isLogIn, setIsLogIn] = useState(false);
+  const [isLogIn, setIsLogIn] = useState(false);
+  const [response, setResponse] = useState([]);
 
 
   const submitHandler = (e) => {
@@ -23,65 +25,38 @@ function SignIn() {
   };
   useEffect(() => {
     localStorage.setItem("loginStatus", JSON.stringify(false));
-
     localStorage.removeItem("userInfo")
   }, []);
 
-
   useEffect(() => {
-    if (isClickSubmit) {
-      getAllDate();
+    if (isClickSubmit && formValidation()) {
+      console.log(detail);
+      callApi();
     }
   }, [isClickSubmit]);
+  
+  const callApi = (e) => {
+      axios
+      .post("http://localhost:5001/user/signIn", detail)
+      .then((response) => setResponse(response.data));
+  };
   useEffect(() => {
-    if (isClickSubmit) {
-      isMatch();
-    }
-  }, [usersList]);
-  // useEffect(() => {
-  //   if (isClickSubmit) {
-  //     localStorage.setItem("LoginStatus", JSON.stringify(usersList));
-  //   }
-  // }, [isLogIn]);
-  // useEffect(() => {
-  //   props. changeWord('ani')
-  //     console.log(position);
-  //     // props.setPosition(position);
-    
-  // }, [position]);
-
-  const getAllDate = () => {
-    setUsersList(JSON.parse(localStorage.getItem("usersList")));
-  };
-  const isMatch = () => {
-    console.log(detail);
-    console.log(usersList);
-    for (let i = 0; i < usersList.length; i++) {
-      console.log(usersList[i].email);
-      console.log(usersList[i].password);
-      if (
-        usersList[i].email == detail.email &&
-        usersList[i].password != detail.password
-      ) {
+    if (isClickSubmit && formValidation()) {
+      // setIsClickSubmit(false);
+      console.log(response);
+      if (response == "Email incorrect" || response=="Password incorrect") {
         setPasswordWrong(true);
-        console.log("ree");
-      }
-      if (
-        
-        usersList[i].email == detail.email &&
-        usersList[i].password == detail.password
-      ) {
-        console.log("ree1");
-
+      }  else  {
+        setPasswordWrong(false);
         setIsCorrect(true);
+        localStorage.setItem("userInfo", JSON.stringify(response));
         localStorage.setItem("loginStatus", JSON.stringify(true));
-        localStorage.setItem("userInfo", JSON.stringify(usersList[i]));
+
       }
-      else{
-        
-      }
+      
     }
-  };
+  }, [response]);
+  
 
   // all validation functions
   const formValidation = () => {
@@ -98,9 +73,6 @@ function SignIn() {
     //   setEmailError("Email fromat not correct");
     //   isValid = false;
     // } 
-    else {
-      setEmailError("Email not found");
-    }
 
     return isValid;
   };
@@ -147,7 +119,7 @@ function SignIn() {
       <div>
         {passwordWrong ? (
           <div>
-            <h1>Wrong password ! </h1>
+            <h1>Wrong Email or password ! </h1>
             <a href="signIn">
               <button className="btn">Try again</button>
             </a>

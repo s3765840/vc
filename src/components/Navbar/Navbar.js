@@ -13,7 +13,6 @@ function Navbar() {
   const signOut = () => {
     localStorage.setItem("loginStatus", JSON.stringify(false));
     localStorage.removeItem("userInfo");
-    console.log("Ccc");
   };
 
   return (
