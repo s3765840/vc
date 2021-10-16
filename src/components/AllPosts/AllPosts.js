@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-
+import axios from "axios";
 import "./AllPosts.css";
 
 function AllPosts() {
@@ -11,62 +11,30 @@ function AllPosts() {
     creatAt: "",
   });
   const [postsList, setPostsList] = useState([]);
-  const [allmyPosts, setAllmyPosts] = useState([]);
+  const [allPosts, setAllPosts] = useState([]);
   const [check, setCheck] = useState(false);
   const [message, setMessage] = useState("");
-  const [isLocalStorageEmpty, setIsLocalStorageEmpty] = useState(true);
+  const [response, setResponse] = useState([]);
 
 
   useEffect(() => {
-    if ("postsList" in localStorage) {
-      setIsLocalStorageEmpty(false)
-    }
-    else{
-      localStorage.setItem("postsList", JSON.stringify(postsList));
-      setMessage("Click Go Post to start your fisrt post!");
-
-      setIsLocalStorageEmpty(true)
-    }
-
-    setCheck(true);
+    axios
+    .get("http://localhost:5001/post/getAllPost")
+    .then((response) => setResponse(response.data));
   }, []);
+  
   useEffect(() => {
    
-    setDetail(JSON.parse(localStorage.getItem("userInfo")));
-    setPostsList(JSON.parse(localStorage.getItem("postsList")));
-    setCheck(true);
-  }, [isLocalStorageEmpty]);
-  useEffect(() => {
-    if (check) {
-      findMyPosts();
-    }
-  }, [check]);
-  useEffect(() => {
-    if (check) {
-      if (allmyPosts.length < 1) {
-        setMessage("Click Go Post to start your fisrt post!");
-      }
-      setMessage("All my posts : ");
-    }
-  }, [allmyPosts]);
-
-  const findMyPosts = () => {
-    console.log(postsList);
-    var temArray = [];
-    for (let i = 0; i < postsList.length; i++) {
-      if (postsList[i].email == detail.email) {
-        temArray.push(postsList[i]);
-      }
-      setAllmyPosts(temArray);
-    }
-  };
-
+      console.log(response);
+    
+  }, [response]);
+  
   return (
     <div className="container1">
       <h1>{message}</h1>
       <div>
-        {allmyPosts.map((post) => (
-          <div key={post.post} className="text2"> {post.post} </div>
+        {response.map((post) => (
+          <div id="post" key={post.id} className="text2"> {post.content} </div>
         ))}
       </div>
     </div>
