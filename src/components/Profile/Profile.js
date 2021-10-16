@@ -31,7 +31,7 @@ function Profile() {
   // find index of user in users list
   const [position, setPosition] = useState(0);
   //display Edit sucessly div
-  const [display1, setDisplay1] = useState();
+  const [display1, setDisplay1] = useState({ display: "none"});
   // disaplay Delete and Delete cancel
   const [display2, setDisplay2] = useState();
   // disaplay EditForm
@@ -41,6 +41,7 @@ function Profile() {
   // back to home page visual cue
   const [display5, setDisplay5] = useState({ display: "none" });
   const [response, setResponse] = useState([]);
+  const [deleteResponse, setDeleteResponse] = useState([]);
 
   useEffect(() => {
     setDetail(JSON.parse(localStorage.getItem("userInfo")));
@@ -51,11 +52,37 @@ function Profile() {
     setDisplay3({ display: "block" });
     setDisplay4({ display: "none" });
   };
-  // disaplay EditForm
+  // cancel disaplay EditForm
 
   const cancelEdit = () => {
     setDisplay3({ display: "none" });
     setDisplay4({ display: "block" });
+  };
+
+
+  //successful update
+  const successfulUpdate = () => {
+    setDisplay3({ display: "none" });
+    setDisplay1({ display: "block" });
+    setTimeout(() => {
+      window.location.reload(false)
+    }, 1000);
+  };
+//cancel delete
+const cancel = () => {
+  setDisplay2({ display: "none" });
+  setDisplay4({ display: "block" });
+};
+//confirm delete
+  const confirmDelet = () => {
+    callDeleteApi();
+    setDisplay2({ display: "none" });
+    setDisplay5({ display: "block" });
+    localStorage.setItem("loginStatus", JSON.stringify(false));
+    localStorage.removeItem("userInfo");
+setTimeout(() => {
+  window.location.href = "http://localhost:3000/";
+}, 1000);
   };
 
   useEffect(() => {
@@ -80,11 +107,21 @@ function Profile() {
       .then((response) => setResponse(response.data));
   };
 
+  const callDeleteApi = (e) => {
+    console.log(detail);
+    axios
+      .post("http://localhost:5001/user/delete", detail)
+      .then((x) => setDeleteResponse(response.data));
+  };
   useEffect(() => {
-    if (isClickSubmit) {
-
+    if (response == "update") {
+      console.log("updadadadadadada");
+      successfulUpdate()
     }
   }, [response]);
+  useEffect(() => {
+    console.log(deleteResponse);
+  }, [deleteResponse]);
 
   const submitHandler = (e) => {
     e.preventDefault();
@@ -98,10 +135,7 @@ function Profile() {
     setDisplay4({ display: "none" });
     setDisplay2({ display: "block" });
   };
-  const cancel = () => {
-    setDisplay2({ display: "none" });
-    setDisplay4({ display: "block" });
-  };
+ 
 
   const formValidation = () => {
     const nameError = "";
@@ -257,9 +291,9 @@ function Profile() {
             <button className="btn1" onClick={cancel}>
               CANCEL
             </button>
-            {/* <button className="btn1" onClick={confirmDelet}>
+            <button className="btn1" onClick={confirmDelet}>
               CONFIRM
-            </button> */}
+            </button>
           </div>
 
           <div className="backToHomePage" style={display5}>

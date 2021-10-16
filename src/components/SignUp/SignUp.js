@@ -79,19 +79,19 @@ function SignUp({}) {
       setPasswordError("Password is requied");
       isValid = false;
     } 
-    // else if (
-    //   !detail.password.match(
-    //     /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{6,}$/
+    else if (
+      !detail.password.match(
+        /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{6,}$/
 
-    //     // !detail.password.match(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{6,}$/
-    //   )
-    // ) {
-    //   setPasswordError(
-    //     "Password at least 6, include Upcase, lower case and one special character(@$!%*#?&)"
-    //   );
-    //   console.log(detail.password);
-    //   isValid = false;
-    // } 
+        // !detail.password.match(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{6,}$/
+      )
+    ) {
+      setPasswordError(
+        "Password at least 6, include Upcase, lower case and one special character(@$!%*#?&)"
+      );
+      console.log(detail.password);
+      isValid = false;
+    } 
     else {
       setPasswordError("");
     }
