@@ -127,6 +127,7 @@ function Post() {
         rows="6"
         cols="100"
         onChange={(e) => setPostDetail(e.target.value)}
+        placeholder="Please less than 600 letter"
       ></textarea>
 <br/>
 <br/>

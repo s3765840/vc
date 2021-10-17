@@ -4,6 +4,21 @@
     margin-top: 50px;
 }
 
-#post{
-    background-color: rgb(223, 223, 223);
+
+.post{
+    padding-left: 100px;
+
+}
+.postdetail{
+    background-color: rgb(157, 190, 190);
+}
+
+.reply{
+    padding-left: 60px;
+    background-color: rgb(194, 216, 216);
+
+}
+
+.input{
+    text-align: center;
 }
