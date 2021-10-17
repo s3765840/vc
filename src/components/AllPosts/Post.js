@@ -21,7 +21,6 @@ export const Post = (props) => {
   const [displayAddBtn, setDisplayAddBtn] = useState({ display: "block" });
 
   useEffect(() => {
-    console.log(props.post);
     setDetail(JSON.parse(localStorage.getItem("userInfo")));
     setPostDetail(props.post);
     setReplies(props.post.Replies);

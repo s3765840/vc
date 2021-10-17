@@ -70,7 +70,6 @@ function SignIn() {
       setEmailError("Email fromat not correct");
       isValid = false;
     } 
-
     return isValid;
   };
 
