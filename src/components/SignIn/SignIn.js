@@ -6,14 +6,11 @@ function SignIn() {
   const [detail, setDetail] = useState({ email: "", password: "" });
   const [emailError, setEmailError] = useState("");
   // input filed promble
-  const [passwordTypeError, setPasswordTypeError] = useState("");
   const [isClickSubmit, setIsClickSubmit] = useState(false);
   const [isCorrect, setIsCorrect] = useState(false);
   // found email but password did not match
   const [passwordWrong, setPasswordWrong] = useState(false);
-  const [usersList, setUsersList] = useState([]);
   // const [position, setPosition] = useState(0);
-  const [isLogIn, setIsLogIn] = useState(false);
   const [response, setResponse] = useState([]);
 
 
