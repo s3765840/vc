@@ -39,7 +39,6 @@ export const Post = (props) => {
     setDisplayAddBtn({ display: "none" });
   };
   const addNewReply = () => {
-    console.log(data);
     callApi()
     setTimeout(() => {
         window.location.reload(false)
