@@ -22,14 +22,10 @@ function Profile() {
     password: "",
     confirmPassword: "",
   });
-  const [edit, setEdit] = useState(false);
-  const [userInfo, setUserInfo] = useState();
   const [nameError, setNameError] = useState("");
   const [passwordError, setPasswordError] = useState("");
   const [confirmPasswordError, setConfirmPasswordError] = useState("");
   const [isClickSubmit, setIsClickSubmit] = useState(false);
-  // find index of user in users list
-  const [position, setPosition] = useState(0);
   //display Edit sucessly div
   const [display1, setDisplay1] = useState({ display: "none"});
   // disaplay Delete and Delete cancel
@@ -115,7 +111,6 @@ setTimeout(() => {
   };
   useEffect(() => {
     if (response == "update") {
-      console.log("updadadadadadada");
       successfulUpdate()
     }
   }, [response]);

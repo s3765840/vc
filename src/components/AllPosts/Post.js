@@ -19,7 +19,6 @@ export const Post = (props) => {
   const [displayInput, setDisplayInput] = useState({ display: "none" });
   const [displaySendBtn, setDisplaySendBtn] = useState({ display: "none" });
   const [displayAddBtn, setDisplayAddBtn] = useState({ display: "block" });
-  const [response, setResponse] = useState([]);
 
   useEffect(() => {
     console.log(props.post);
@@ -27,7 +26,6 @@ export const Post = (props) => {
     setPostDetail(props.post);
     setReplies(props.post.Replies);
     setIsDataDownload(true);
-
   }, []);
   useEffect(() => {
     if (isDataDownload) {
@@ -51,7 +49,6 @@ export const Post = (props) => {
   const callApi = (e) => {
     axios
     .post("http://localhost:5001/post/addReply", data)
-    .then((response) => setResponse(response.data));
     
 };
 
